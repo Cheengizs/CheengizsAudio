@@ -1,0 +1,10 @@
+.text-and-audio {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-and-end {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
