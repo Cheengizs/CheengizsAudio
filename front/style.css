@@ -8,3 +8,10 @@
   flex-direction: row;
   justify-content: space-around;
 }
+
+.input_and_tracks {
+  background-color: rgb(204, 242, 242);
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+}

@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = builder.Configuration.GetConnectionString("sqlServer")!;
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -13,6 +17,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddSingleton<IAudioDbContext>(new AudioDbContext(connectionString));
+builder.Services.AddScoped<IMusicRepository, MusicRepository>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -20,32 +27,28 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors(); // enable CORS middleware
+app.UseCors();
 
-
-List<Music> pl = new()
+app.MapGet("/audio/random", async (IMusicRepository MusicRepository) =>
 {
-    new Music() { Id = 1, Title = "Cupsize yura yura", Path = @"D:\dotnet_projs\CheengizsAudio\audios\cupsize.mp3" },
-    new Music() { Id = 2, Title = "Maks Corj", Path = @"D:\dotnet_projs\CheengizsAudio\audios\Макс Корж - 2 Типа Людей.mp3"}
-};
+    return Results.Ok(await MusicRepository.GetRandom());
+});
 
-app.MapGet("/", async () => Results.Ok(pl));
-
-app.MapGet("/audio/{id}", async (HttpContext context , int id) =>
+app.MapGet("/audio/{id}", async (HttpContext context, IMusicRepository repo, int id) =>
 {
-    var filePath = pl.Find(x => x.Id == id)?.Path;
-    // var filePath = context.Request;
+    var musicObj = await repo.GetById(id);
+    var filePath = musicObj.Path;
 
-    context.Response.ContentType = "audio/mpeg"; // important for browsers
-
+    context.Response.ContentType = "audio/mpeg";
     await context.Response.SendFileAsync(filePath);
+});
+
+app.MapPost("/audio/findByName", async (HttpContext context, IMusicRepository repo, [FromBody] MusicName name) =>
+{
+    var result = await repo.GetByName(name.Name);
+    return result;
 });
 
 app.Run();
 
-public class Music
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Path { get; set; }
-}
+public record MusicName(string Name);
