@@ -12,6 +12,11 @@ const buttonSearch = document.querySelector(".button_search");
 const trackSearcher = document.querySelector("#track_searcher");
 const trackList = document.querySelector(".track_list");
 
+const listOfTracks = [0];
+
+let audioList = 0;
+let currTrack = 1;
+
 buttonSearch.addEventListener("click", async () => {
   if (trackSearcher.value === "") {
     showPopup("input is empty, please, try again later");
@@ -20,6 +25,33 @@ buttonSearch.addEventListener("click", async () => {
 
   fillMusicList(trackSearcher.value);
 });
+
+const play_pause = document.querySelector("#play-pause");
+const prevv = document.querySelector("#prevv");
+const next = document.querySelector("#next");
+
+next.onclick = async () => {
+  console.log(currTrack);
+  listOfTracks.push(currTrack);
+  await someOtherFunc();
+};
+
+prevv.onclick = async () => {
+  console.log(currTrack);
+  currTrack = listOfTracks[listOfTracks.length - 1];
+  listOfTracks.pop();
+  someFunc();
+};
+
+play_pause.onclick = () => {
+  if (audio instanceof Audio) {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+};
 
 async function fillMusicList(name) {
   console.log(name);
@@ -40,9 +72,6 @@ async function fillMusicList(name) {
     trackList.appendChild(createMusicCard(item));
   });
 }
-
-let audioList = 0;
-let currTrack = 1;
 
 let audio = 0;
 async function someFunc() {
@@ -74,13 +103,17 @@ async function someFunc() {
       });
 
       audio.addEventListener("ended", async () => {
-        const resp = await fetch(localhost + "/audio/random");
-        const idishnik = await resp.json();
-        console.log(idishnik);
-        currTrack = idishnik;
-        someFunc();
+        someOtherFunc();
       });
     });
+}
+
+async function someOtherFunc() {
+  const resp = await fetch(localhost + "/audio/random");
+  const idishnik = await resp.json();
+  console.log(idishnik);
+  currTrack = idishnik;
+  someFunc();
 }
 
 cupsize.addEventListener("click", () => {

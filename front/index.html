@@ -7,6 +7,22 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="audio-bar">
+      <div class="controls">
+        <button id="prevv" title="Предыдущий трек">⏮️</button>
+        <button id="play-pause" title="Воспроизвести / Пауза">▶️</button>
+        <button id="next" title="Следующий трек">⏭️</button>
+      </div>
+
+      <div class="track-display">
+        <img id="track-cover" src="cover-placeholder.jpg" alt="Обложка трека" />
+        <div class="track-text">
+          <h3 id="track-title">Название трека</h3>
+          <p id="track-artist">Имя исполнителя</p>
+        </div>
+      </div>
+    </div>
+
     <div class="text-and-audio">
       <div>
         <audio class="audio-tag" src=""></audio>
@@ -35,5 +51,6 @@
       <div class="track_list"></div>
     </div>
     <script src="script.js"></script>
+    <script src="audio_player.js"></script>
   </body>
 </html>
