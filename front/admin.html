@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="container-wrapper">
+      <div class="page-header">
+        <h1>Admin Panel</h1>
+        <p>Manage your music, playlists, and users</p>
+      </div>
+
+      <div class="musicContainer">
+        <div class="section-title">Music Management</div>
+        <div class="input music_title">
+          <h3>Music title</h3>
+          <input
+            type="text"
+            id="input-music_title"
+            placeholder="Enter music title..."
+          />
+        </div>
+        <div class="input music_author">
+          <h3>Music author</h3>
+          <input
+            type="text"
+            id="input-music_author"
+            placeholder="Enter author name..."
+          />
+        </div>
+        <div class="input music_path">
+          <h3>Music path</h3>
+          <input
+            type="text"
+            id="input-music_path"
+            placeholder="Enter file path or URL..."
+          />
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary">Add Music</button>
+          <button class="btn btn-secondary">Clear</button>
+        </div>
+        <div class="status-container" id="music-status">
+          <div class="status-title">Status</div>
+          <div class="status-message">Waiting for action...</div>
+        </div>
+      </div>
+
+      <div class="playlist_container">
+        <div class="section-title">Playlist Management</div>
+        <div class="input playlist_title">
+          <h3>Playlist title</h3>
+          <input
+            type="text"
+            id="input-playlist_title"
+            placeholder="Enter playlist name..."
+          />
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary">Create Playlist</button>
+          <button class="btn btn-secondary">Clear</button>
+        </div>
+        <div class="status-container" id="playlist-status">
+          <div class="status-title">Status</div>
+          <div class="status-message">Waiting for action...</div>
+        </div>
+      </div>
+
+      <div class="user_container">
+        <div class="section-title">User Management</div>
+        <div class="input user_username">
+          <h3>User username</h3>
+          <input
+            type="text"
+            id="input-user-username"
+            placeholder="Enter username..."
+          />
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary">Add User</button>
+          <button class="btn btn-secondary">Clear</button>
+        </div>
+        <div class="status-container" id="user-status">
+          <div class="status-title">Status</div>
+          <div class="status-message">Waiting for action...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

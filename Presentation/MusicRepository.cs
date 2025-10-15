@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Presentation.PresentationDto.MusicDto;
 
 namespace Presentation;
 
@@ -48,5 +49,30 @@ public class MusicRepository : IMusicRepository
         var list = connection.Query<Music>(sql).ToList();
         var x = new Random().Next(list.Count);
         return list[x].Id;
-    } 
+    }
+
+    public async Task AddMusicAsync(MusicToRepoDto music)
+    {
+        Music musicToAdd = new Music()
+        {
+            Title = music.Title,
+            Author = music.Author,
+            Path = music.Path
+        };
+        
+        await using var connection = _context.GetConnection();
+        connection.Open();
+
+        string sql = @"INSERT INTO dbo.music (Title, Author, Path) VALUES (@Title, @Author, @Path)";
+        try
+        {
+            await connection.ExecuteAsync(sql, musicToAdd);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+    }
 }

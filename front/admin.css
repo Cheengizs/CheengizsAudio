@@ -1,0 +1,295 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.musicContainer,
+.playlist_container,
+.user_container {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.musicContainer:hover,
+.playlist_container:hover,
+.user_container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #667eea;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::before {
+  content: "🎵";
+  font-size: 1.5rem;
+}
+
+.playlist_container .section-title::before {
+  content: "📋";
+}
+
+.user_container .section-title::before {
+  content: "👤";
+}
+
+.input {
+  margin-bottom: 20px;
+}
+
+.input h3 {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+input[type="text"]:hover {
+  border-color: #b0b8e0;
+}
+
+.music_response {
+  margin-top: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.music_response h3 {
+  color: #667eea;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.status-container {
+  margin-top: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  display: none;
+  animation: slideIn 0.3s ease;
+}
+
+.status-container.show {
+  display: block;
+}
+
+.status-container.loading {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  color: #856404;
+}
+
+.status-container.success {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+  color: #155724;
+}
+
+.status-container.error {
+  background: #f8d7da;
+  border-left: 4px solid #dc3545;
+  color: #721c24;
+}
+
+.status-container.warning {
+  background: #ffff94;
+  border-left: 4px solid #797726;
+  color: #7b7841;
+}
+
+.status-container .status-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-container .status-message {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .page-header p {
+    font-size: 1rem;
+  }
+
+  .musicContainer,
+  .playlist_container,
+  .user_container {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .input h3 {
+    font-size: 0.9rem;
+  }
+
+  input[type="text"] {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .musicContainer,
+  .playlist_container,
+  .user_container {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  input[type="text"] {
+    padding: 10px 12px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}
