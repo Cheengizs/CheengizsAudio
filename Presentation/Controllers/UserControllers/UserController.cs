@@ -50,7 +50,7 @@ public class UserController : ControllerBase
             return Unauthorized("Invalid email or password");
         
         var userToJwtDto = new UserToJwtDto(user.Id, user.Username, user.Email);
-        return Ok(_jwtService.GenerateJwtAsync(userToJwtDto));
+        return Ok(await _jwtService.GenerateJwtAsync(userToJwtDto));
         
     }
 }

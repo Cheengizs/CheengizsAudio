@@ -1,19 +1,18 @@
 USE CheengizsAudio;
 
-/*
-DROP TABLE IF EXISTS dbo.app_user;
-DROP TABLE IF EXISTS dbo.playlist;
-DROP TABLE IF EXISTS dbo.music;
 DROP TABLE IF EXISTS [dbo].[music_user_like];
 DROP TABLE IF EXISTS [dbo].[music_user_create];
 DROP TABLE IF EXISTS [dbo].[music_playlist];
-*/
+DROP TABLE IF EXISTS dbo.playlist;
+DROP TABLE IF EXISTS dbo.music;
+DROP TABLE IF EXISTS dbo.app_user;
 
 GO
 CREATE TABLE dbo.app_user (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(16) NOT NULL UNIQUE,
-    HashPassword NVARCHAR(MAX) NOT NULL
+    HashPassword NVARCHAR(MAX) NOT NULL,
+	Email NVARCHAR(MAX) NOT NULL UNIQUE
 );
 
 GO
@@ -28,7 +27,8 @@ GO
 CREATE TABLE dbo.music (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Title NVARCHAR(50) NOT NULL,
-    Author NVARCHAR(50) NOT NULL
+    Author NVARCHAR(50) NOT NULL,
+	Path NVARCHAR(MAX)
 );
 
 CREATE TABLE music_user_create(
