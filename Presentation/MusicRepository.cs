@@ -16,7 +16,7 @@ public class MusicRepository : IMusicRepository
     {
         try
         {
-            using var connection = _context.GetConnection();
+            await using var connection = _context.GetConnection();
             connection.Open();
 
             var sql = @"SELECT * FROM dbo.music";
@@ -34,7 +34,7 @@ public class MusicRepository : IMusicRepository
 
     public async Task<Music?> GetById(int id)
     {
-        using var connection = _context.GetConnection();
+        await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"SELECT * FROM music WHERE id = @id";
         var music = connection.Query<Music>(sql, new { id }).FirstOrDefault();
@@ -43,7 +43,7 @@ public class MusicRepository : IMusicRepository
 
     public async Task<int> GetRandom()
     {
-        using var connection = _context.GetConnection();
+        await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"SELECT * FROM dbo.music";
         var list = connection.Query<Music>(sql).ToList();
@@ -59,7 +59,7 @@ public class MusicRepository : IMusicRepository
             Author = music.Author,
             Path = music.Path
         };
-        
+
         await using var connection = _context.GetConnection();
         connection.Open();
 
@@ -73,6 +73,38 @@ public class MusicRepository : IMusicRepository
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public async Task DeleteMusicByIdAsync(int id)
+    {
+        await using var connection = _context.GetConnection();
+        connection.Open();
+        var sql = @"DELETE FROM dbo.music WHERE id = @id";
+        try
+        {
+            await connection.ExecuteAsync(sql, new { id = id });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task DeleteMusicByTitleAsync(string title)
+    {
+        await using var connection = _context.GetConnection();
+        connection.Open();
+        var sql = @"DELETE FROM dbo.music WHERE Title = @title";
         
+        try
+        {
+            await connection.ExecuteAsync(sql, new { title = title });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

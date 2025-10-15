@@ -8,4 +8,6 @@ public interface IMusicRepository
     Task<Music?> GetById(int id);
     Task<int> GetRandom();
     Task AddMusicAsync(MusicToRepoDto music);
+    Task DeleteMusicByIdAsync(int id);
+    Task DeleteMusicByTitleAsync(string title);
 }

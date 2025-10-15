@@ -3,9 +3,9 @@ using Presentation.PresentationDto.MusicDto;
 
 namespace Presentation.Controllers.MusicControllers;
 
-[Route("/audio")]
+[Route("/api/v1/audio")]
 [ApiController]
-public class MusicController : ControllerBase
+public class MusicController: ControllerBase
 {
     private readonly IMusicRepository _musicRepository;
 
@@ -35,5 +35,19 @@ public class MusicController : ControllerBase
             Console.WriteLine(e);
             return BadRequest($"Some exception happened:" + e.Message);
         }
+    }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteMusicByIdAsync(int id)
+    {
+        await _musicRepository.DeleteMusicByIdAsync(id);
+        return NoContent();
+    }
+    
+    [HttpDelete("{title}")]
+    public async Task<IActionResult> DeleteMusicByTitleAsync(string title)
+    {
+        await _musicRepository.DeleteMusicByTitleAsync(title);
+        return NoContent();
     }
 }
