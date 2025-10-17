@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Presentation.Services.JwtServicies;
 using Presentation.Repositories.UserRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Presentation.Repositories.PlaylistRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +36,9 @@ builder.Services.AddScoped<IJwtService>(sp => new JwtService(jwtServiceStruct));
 
 builder.Services.AddScoped<IMusicRepository, MusicRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPlaylistRepository, PlaylistRepository>();
 builder.Services.AddScoped<IUserPasswordHasher, UserPasswordHasher>();
+
 
 builder.Services.AddAuthentication(options =>
     {
@@ -56,11 +59,17 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseCors();

@@ -12,7 +12,7 @@ public class MusicRepository : IMusicRepository
         _context = dbContext;
     }
 
-    public async Task<List<Music>> GetByName(string name)
+    public async Task<List<MusicResponseDto>> GetByName(string name)
     {
         try
         {
@@ -22,7 +22,13 @@ public class MusicRepository : IMusicRepository
             var sql = @"SELECT * FROM dbo.music";
 
             var musics = connection.Query<Music>(sql).ToList();
-            var res = musics.Where(m => Fastenshtein.Levenshtein.Distance(m.Title, name) <= 5).ToList();
+            musics = musics.Where(m => Fastenshtein.Levenshtein.Distance(m.Title, name) <= 5).ToList();
+            
+            List<MusicResponseDto> res = new List<MusicResponseDto>();
+            foreach (var music in musics)
+            {
+                res.Add(new(music.Title, music.Author));
+            }
             return res;
         }
         catch (Exception e)
@@ -32,13 +38,17 @@ public class MusicRepository : IMusicRepository
         }
     }
 
-    public async Task<Music?> GetById(int id)
+    public async Task<MusicResponseDto?> GetById(int id)
     {
         await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"SELECT * FROM music WHERE id = @id";
         var music = connection.Query<Music>(sql, new { id }).FirstOrDefault();
-        return music;
+        if (music == null)
+            return null;
+        
+        var res = new MusicResponseDto(music.Title, music.Author);
+        return res;
     }
 
     public async Task<int> GetRandom()

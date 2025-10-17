@@ -44,7 +44,7 @@ async function sendRequest(endpoint, data, statusElement) {
 
     statusSuccess(statusElement);
   } catch (error) {
-    statusError(statusElement);
+    statusError(statusElement, error);
   }
 }
 
@@ -116,24 +116,27 @@ removeMusicBtn.addEventListener("click", async () => {
 
 // === PLAYLIST MANAGEMENT ===
 const addPlaylistBtn = document.querySelector(
-  ".playlist_container .btn-primary"
+  ".playlist_container #btn-create-playlist"
 );
 const clearPlaylistBtn = document.querySelector(
-  ".playlist_container .btn-secondary"
+  ".playlist_container #btn-clear-playlist"
 );
-const playlistStatus = document.querySelector(
-  "#playlist-status .status-message"
-);
+const playlistStatus = document.querySelector("#playlist-status");
 
 addPlaylistBtn.addEventListener("click", async () => {
   const title = document.getElementById("input-playlist_title").value.trim();
+  const userId = document.querySelector("#input-playlist_userid").value.trim();
 
-  if (!title) {
-    playlistStatus.textContent = "⚠️ Please enter a playlist name.";
+  if (!title || !userId) {
+    statusWarning(playlistStatus);
     return;
   }
 
-  await sendRequest("playlist/create", { title }, playlistStatus);
+  const data = {
+    Title: title,
+    UserId: userId,
+  };
+  await sendRequest("playlist", data, playlistStatus);
 });
 
 clearPlaylistBtn.addEventListener("click", () => {

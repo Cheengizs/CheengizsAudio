@@ -54,6 +54,7 @@
 
       <div class="playlist_container">
         <div class="section-title">Playlist Management</div>
+        <!-- Create Playlist Form -->
         <div class="input playlist_title">
           <h3>Playlist title</h3>
           <input
@@ -62,11 +63,56 @@
             placeholder="Enter playlist name..."
           />
         </div>
+        <div class="input playlist_userid">
+          <h3>Playlist User ID</h3>
+          <input
+            type="text"
+            id="input-playlist_userid"
+            placeholder="Enter user ID..."
+          />
+        </div>
         <div class="action-buttons">
-          <button class="btn btn-primary">Create Playlist</button>
-          <button class="btn btn-secondary">Clear</button>
+          <button class="btn btn-primary" id="btn-create-playlist">
+            Create Playlist
+          </button>
+          <button class="btn btn-secondary" id="btn-clear-playlist">
+            Clear
+          </button>
         </div>
         <div class="status-container" id="playlist-status">
+          <div class="status-title">Status</div>
+          <div class="status-message">Waiting for action...</div>
+        </div>
+
+        <!-- Add Audio to Playlist Form -->
+        <div class="section-title" style="margin-top: 30px">
+          Add Audio to Playlist
+        </div>
+        <div class="input playlist_audio">
+          <h3>Audio ID</h3>
+          <input
+            type="text"
+            id="input-audio-id"
+            placeholder="Enter audio ID..."
+          />
+        </div>
+        <div class="input playlist_id">
+          <h3>Playlist ID</h3>
+          <input
+            type="text"
+            id="input-playlist-id"
+            placeholder="Enter playlist ID..."
+          />
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btn-add-to-playlist">
+            Add to Playlist
+          </button>
+          <button class="btn btn-secondary" id="btn-clear-add-to-playlist">
+            Clear
+          </button>
+        </div>
+        <div class="status-container" id="add-to-playlist-status">
           <div class="status-title">Status</div>
           <div class="status-message">Waiting for action...</div>
         </div>

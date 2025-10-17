@@ -4,8 +4,8 @@ namespace Presentation;
 
 public interface IMusicRepository
 {
-    Task<List<Music>> GetByName(string name);
-    Task<Music?> GetById(int id);
+    Task<List<MusicResponseDto>> GetByName(string name);
+    Task<MusicResponseDto?> GetById(int id);
     Task<int> GetRandom();
     Task AddMusicAsync(MusicToRepoDto music);
     Task DeleteMusicByIdAsync(int id);

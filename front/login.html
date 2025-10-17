@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login — CheengizsAudio</title>
+    <link rel="stylesheet" href="register.css" />
+  </head>
+  <body>
+    <main class="register-card" aria-labelledby="login-title">
+      <header class="register-header">
+        <div class="brand" aria-hidden="true">CA</div>
+        <div>
+          <h1 id="login-title">Sign in</h1>
+          <p class="lead">Welcome back — sign in to continue</p>
+        </div>
+      </header>
+
+      <form id="loginForm" novalidate>
+        <div class="form-grid">
+          <div class="form-row full">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              required
+            />
+            <div class="error" data-for="email"></div>
+          </div>
+
+          <div class="form-row full">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+            <div class="error" data-for="password"></div>
+          </div>
+
+          <div class="form-row full actions">
+            <button id="submitBtn" class="btn" type="submit">Sign in</button>
+            <a class="link" href="register.html">Create account</a>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <script src="scripts/login.js" defer></script>
+  </body>
+</html>
