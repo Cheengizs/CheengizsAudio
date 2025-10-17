@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Presentation.PresentationDto.MusicDto;
+using System.IO;
+using System;
 
 namespace Presentation.Controllers.MusicControllers;
 
@@ -19,11 +21,12 @@ public class MusicController : ControllerBase
     {
         try
         {
-            var res = await _musicRepository.GetById(id);
+            var music = await _musicRepository.GetById(id);
 
-            if (res == null)
+            if (music == null)
                 return NotFound();
-
+            
+            var res = new MusicResponseDto(music.Title, music.Author);
             return Ok(res);
         }
         catch (Exception e)
@@ -31,6 +34,24 @@ public class MusicController : ControllerBase
             Console.WriteLine(e);
             return BadRequest(e.Message);
         }
+    }
+
+    [HttpGet("download/{id}")]
+    public async Task<IActionResult> DownloadMusicByIdAsync(int id)
+    {
+        var music = await _musicRepository.GetById(id);
+        if (music == null)
+            return NotFound("Музыка не найдена в базе данных.");
+
+        if (!System.IO.File.Exists(music.Path))
+            return NotFound("Файл не найден на диске.");
+
+        // Определяем MIME-тип (например, для mp3)
+        var contentType = "audio/mpeg";
+        var fileName = Path.GetFileName(music.Path);
+
+        // Возвращаем файл клиенту
+        return PhysicalFile(music.Path, contentType, fileName);
     }
 
     [HttpPost]

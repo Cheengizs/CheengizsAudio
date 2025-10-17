@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Мой Аудио Плеер</title>
+    <link rel="stylesheet" href="audio.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">🎧 My Audio Player</h1>
+
+      <div class="player">
+        <div class="album-art">
+          <img
+            src="https://cdn.pixabay.com/photo/2015/09/05/20/02/cd-924621_1280.jpg"
+            alt="album cover"
+          />
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+
+        <!-- Новые элементы -->
+        <div class="track-info">
+          <h2 class="track-title">Deep Sky Journey</h2>
+          <p class="track-artist">by Aurora Sounds</p>
+        </div>
+
+        <audio id="audio" src="sample.mp3"></audio>
+
+        <div class="controls">
+          <button id="play" class="btn">▶️ Начать</button>
+          <button id="pause" class="btn">⏸ Остановить</button>
+          <button id="download" class="btn">⬇️ Скачать</button>
+        </div>
+      </div>
+
+      <footer>
+        <p>Создано с ❤️ в 2025</p>
+      </footer>
+    </div>
+    <script src="audio.js"></script>
+  </body>
+</html>

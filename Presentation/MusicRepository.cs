@@ -38,16 +38,13 @@ public class MusicRepository : IMusicRepository
         }
     }
 
-    public async Task<MusicResponseDto?> GetById(int id)
+    public async Task<Music?> GetById(int id)
     {
         await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"SELECT * FROM music WHERE id = @id";
-        var music = connection.Query<Music>(sql, new { id }).FirstOrDefault();
-        if (music == null)
-            return null;
+        var res = connection.Query<Music>(sql, new { id }).FirstOrDefault();
         
-        var res = new MusicResponseDto(music.Title, music.Author);
         return res;
     }
 
