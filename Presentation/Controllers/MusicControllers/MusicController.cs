@@ -16,6 +16,36 @@ public class MusicController : ControllerBase
         _musicRepository = musicRepository;
     }
 
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadMusic(IFormFile file)
+    {
+        try
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Файл не выбран или пустой.");
+
+            var uploadPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).ToString() + "\\audios");
+            Console.WriteLine(uploadPath);
+            
+            string newFilePath = uploadPath + "\\" + file.FileName;
+            using (var stream = new FileStream(newFilePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            
+            MusicToRepoDto dto = new("gay", "gay", newFilePath);
+            await _musicRepository.AddMusicAsync(dto);
+            
+            return Ok(new { message = "Файл успешно загружен!", fileName = file.FileName });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "Ошибка на сервере при загрузке файла.");
+        }
+    }
+
+    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMusicByIdAsync(int id)
     {
