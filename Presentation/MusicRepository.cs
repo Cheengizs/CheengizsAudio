@@ -23,12 +23,13 @@ public class MusicRepository : IMusicRepository
 
             var musics = connection.Query<Music>(sql).ToList();
             musics = musics.Where(m => Fastenshtein.Levenshtein.Distance(m.Title, name) <= 5).ToList();
-            
+
             List<MusicResponseDto> res = new List<MusicResponseDto>();
             foreach (var music in musics)
             {
                 res.Add(new(music.Title, music.Author));
             }
+
             return res;
         }
         catch (Exception e)
@@ -44,18 +45,18 @@ public class MusicRepository : IMusicRepository
         connection.Open();
         var sql = @"SELECT * FROM music WHERE id = @id";
         var res = connection.Query<Music>(sql, new { id }).FirstOrDefault();
-        
+
         return res;
     }
 
-    public async Task<int> GetRandom()
+    public async Task<Music> GetRandom()
     {
         await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"SELECT * FROM dbo.music";
         var list = connection.Query<Music>(sql).ToList();
         var x = new Random().Next(list.Count);
-        return list[x].Id;
+        return list[x];
     }
 
     public async Task AddMusicAsync(MusicToRepoDto music)
@@ -103,7 +104,7 @@ public class MusicRepository : IMusicRepository
         await using var connection = _context.GetConnection();
         connection.Open();
         var sql = @"DELETE FROM dbo.music WHERE Title = @title";
-        
+
         try
         {
             await connection.ExecuteAsync(sql, new { title = title });
@@ -113,5 +114,17 @@ public class MusicRepository : IMusicRepository
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public async Task<List<Music>> GetMusicFromPlaylist(int playlistId)
+    {
+        await using var connection = _context.GetConnection();
+        await connection.OpenAsync();
+
+        var sql =
+            @"SELECT m.* FROM dbo.music AS m INNER JOIN dbo.music_playlist AS mp ON m.Id = mp.music_id WHERE mp.playlist_id = @playlistId;";
+       
+        var listMusic = await connection.QueryAsync<Music>(sql, new { playlistId });
+        return listMusic.ToList();
     }
 }

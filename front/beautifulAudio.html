@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Track Card</title>
+    <link rel="stylesheet" href="beautifulAudio.css" />
+  </head>
+  <body>
+    <div class="background"></div>
+
+    <div class="container">
+      <div class="image-wrapper">
+        <img src="cup.jpg" alt="Track Cover" id="main_photo" />
+      </div>
+      <div class="track-name">shaha shaha</div>
+      <div class="author-name">akjknjsnfkjasdnfjkn</div>
+    </div>
+
+    <div class="trigger-zone"></div>
+
+    <div class="control-panel">
+      <div class="drag-indicator"></div>
+
+      <div class="timeline-container">
+        <div class="time-display">
+          <span id="current-time">1:23</span>
+          <span id="total-time">3:45</span>
+        </div>
+        <div class="timeline" id="timeline">
+          <div class="timeline-progress" id="progress">
+            <div class="timeline-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="control-btn" id="prev-btn">⏮</button>
+        <button class="control-btn play-pause" id="play-btn">▶</button>
+        <button class="control-btn" id="next-btn">⏭</button>
+        <button class="like-btn">🖤</button>
+      </div>
+    </div>
+
+    <script type="module" src="audioListen.js"></script>
+
+    <script></script>
+
+    <script>
+      window.addEventListener("load", () => {
+        document.querySelector(".background").style.backgroundImage =
+          "url('./cup.jpg')";
+      });
+    </script>
+  </body>
+</html>

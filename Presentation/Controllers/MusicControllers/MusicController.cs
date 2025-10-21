@@ -66,6 +66,30 @@ public class MusicController : ControllerBase
         }
     }
 
+    [HttpPost("getList")]
+    public async Task<IActionResult> GetMusicList(MusicContext context)
+    {
+        if (context.PlaylistId == null)
+        {
+            if (context.AudioId == null)
+            {
+                return BadRequest();
+            }
+            return BadRequest();
+        }
+        else
+        {
+            List<MusicIdResponseDto> res = new List<MusicIdResponseDto>();
+            var temp = await _musicRepository.GetMusicFromPlaylist(context.PlaylistId.Value);
+            foreach (var elem in temp)
+            {
+                res.Add(new(elem.Id, elem.Title, elem.Author));
+            }
+
+            return Ok(res);
+        }
+    }
+
     [HttpGet("download/{id}")]
     public async Task<IActionResult> DownloadMusicByIdAsync(int id)
     {
@@ -84,6 +108,13 @@ public class MusicController : ControllerBase
         return PhysicalFile(music.Path, contentType, fileName);
     }
 
+    [HttpGet("getRandom")]
+    public async Task<IActionResult> GetRandomMusic()
+    {
+        var elem = await _musicRepository.GetRandom();
+        return Ok(new MusicIdResponseDto(elem.Id, elem.Title, elem.Author));
+    }
+    
     [HttpPost]
     public async Task<IActionResult> AddNewTrack([FromBody] MusicRequestDto dto)
     {
