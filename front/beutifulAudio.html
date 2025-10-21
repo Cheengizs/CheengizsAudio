@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Track Card</title>
+    <link rel="stylesheet" href="beautifulAudio.css" />
+  </head>
+  <body>
+    <div class="background"></div>
+
+    <div class="container">
+      <div class="image-wrapper">
+        <img src="cup.jpg" alt="Track Cover" id="main_photo" />
+      </div>
+      <div class="track-name">shaha shaha</div>
+      <div class="author-name">akjknjsnfkjasdnfjkn</div>
+    </div>
+
+    <div class="trigger-zone"></div>
+
+    <div class="control-panel">
+      <div class="drag-indicator"></div>
+
+      <div class="timeline-container">
+        <div class="time-display">
+          <span id="current-time">1:23</span>
+          <span id="total-time">3:45</span>
+        </div>
+        <div class="timeline" id="timeline">
+          <div class="timeline-progress" id="progress">
+            <div class="timeline-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="control-btn" id="prev-btn">⏮</button>
+        <button class="control-btn play-pause" id="play-btn">⏸</button>
+        <button class="control-btn" id="next-btn">⏭</button>
+      </div>
+    </div>
+
+    <button id="change_photo-btn">click</button>
+    <script>
+      const panel = document.querySelector(".control-panel");
+      const playBtn = document.getElementById("play-btn");
+      const timeline = document.getElementById("timeline");
+      const progress = document.getElementById("progress");
+
+      let isPlaying = true;
+      let hideTimeout;
+
+      // Show panel when mouse moves to bottom of screen
+      document.addEventListener("mousemove", (e) => {
+        const windowHeight = window.innerHeight;
+        const mouseY = e.clientY;
+
+        // Show panel when mouse is in bottom 80px
+        if (mouseY > windowHeight - 80) {
+          panel.classList.add("visible");
+
+          // Clear any existing hide timeout
+          clearTimeout(hideTimeout);
+        } else if (mouseY < windowHeight - 200) {
+          // Hide panel when mouse moves away from bottom area
+          clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(() => {
+            panel.classList.remove("visible");
+          }, 500);
+        }
+      });
+
+      // Keep panel visible when hovering over it
+      panel.addEventListener("mouseenter", () => {
+        clearTimeout(hideTimeout);
+        panel.classList.add("visible");
+      });
+
+      panel.addEventListener("mouseleave", () => {
+        hideTimeout = setTimeout(() => {
+          panel.classList.remove("visible");
+        }, 500);
+      });
+
+      // Play/Pause
+      playBtn.addEventListener("click", () => {
+        isPlaying = !isPlaying;
+        playBtn.textContent = isPlaying ? "⏸" : "▶";
+      });
+
+      // Timeline control
+      timeline.addEventListener("click", (e) => {
+        const rect = timeline.getBoundingClientRect();
+        const percent = ((e.clientX - rect.left) / rect.width) * 100;
+        progress.style.width = percent + "%";
+      });
+
+      // Prev/Next buttons
+      document.getElementById("prev-btn").addEventListener("click", () => {
+        console.log("Previous track");
+      });
+
+      document.getElementById("next-btn").addEventListener("click", () => {
+        console.log("Next track");
+      });
+    </script>
+
+    <script>
+      window.addEventListener("load", () => {
+        document.querySelector(".background").style.backgroundImage =
+          "url('./cup.jpg')";
+      });
+
+      document
+        .querySelector("#change_photo-btn")
+        .addEventListener("click", async () => {
+          document.querySelector("#main_photo").src = "load.png";
+          document.querySelector(".background").style.backgroundImage =
+            "url('./load.png')";
+        });
+    </script>
+  </body>
+</html>
