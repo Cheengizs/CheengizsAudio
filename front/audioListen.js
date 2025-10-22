@@ -1,5 +1,7 @@
 import showErrorPage from "./errorPageFunction.js";
 import isNumber from "./isNumberFunction.js";
+import formatTime from "./formatTimeFunction.js";
+
 const API_BASE_URL = "http://localhost:5272/api/v1";
 
 let audioList;
@@ -40,8 +42,11 @@ window.onload = async () => {
   console.log(audioList);
   audioIndex = 0;
 
-  setAndLoadTrack();
+  await setAndLoadTrack();
 };
+
+const currTimeSpan = document.querySelector("#current-time");
+const totalTimeSpan = document.querySelector("#total-time");
 
 async function setAndLoadTrack() {
   if (audioIndex >= audioList.length) {
@@ -62,25 +67,48 @@ async function setAndLoadTrack() {
     );
 
     const blob = await responseAudioBlob.blob();
-    const link = URL.createObjectURL(blob);
+    const link = await URL.createObjectURL(blob);
     audio = new Audio(link);
+    audio.autoplay = true;
+
+    currTimeSpan.innerText = "00:00";
+
     audio.addEventListener("ended", async () => {
       audioIndex++;
       await setAndLoadTrack();
+      audio.play();
     });
-    audio.addEventListener("timeupdate", () => {
+
+    audio.addEventListener("loadedmetadata", async () => {
+      totalTimeSpan.innerText = await formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", async () => {
       if (!audio.duration) return;
 
+      currTimeSpan.innerText = await formatTime(audio.currentTime);
       const percent = (audio.currentTime / audio.duration) * 100;
       progress.style.width = percent + "%";
     });
   } catch {
     showErrorPage();
   }
+
   try {
+    console.log("oiadsfhiadshfiasduf");
     const responseImageBlob = await fetch(
       API_BASE_URL + `/audio/photo/${audioId}`
     );
+    if (!responseImageBlob.ok) {
+      document.querySelector("#main_photo").src = "./imageLoadFailed.png";
+    }
+    const blobImage = await responseImageBlob.blob();
+    const linkImage = await URL.createObjectURL(blobImage);
+    console.log(blobImage);
+    document.querySelector("#main_photo").src = linkImage;
+    document.querySelector(
+      ".background"
+    ).style.backgroundImage = `url('${linkImage}')`;
   } catch {
     document.querySelector("#main_photo").src = "./imageLoadFailed.png";
   }
@@ -151,10 +179,12 @@ timeline.addEventListener("click", (e) => {
 // Prev/Next buttons
 document.getElementById("prev-btn").addEventListener("click", async () => {
   console.log("Previous track");
-  if (audio instanceof Audio) audio.pause();
-  audioIndex--;
-  await setAndLoadTrack();
-  audio.play();
+  if (audioIndex > 0) {
+    if (audio instanceof Audio) audio.pause();
+    audioIndex--;
+    await setAndLoadTrack();
+    audio.play();
+  }
 });
 
 document.getElementById("next-btn").addEventListener("click", async () => {

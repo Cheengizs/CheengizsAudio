@@ -1,3 +1,3 @@
 ﻿namespace Presentation.PresentationDto.MusicDto;
 
-public record MusicToRepoDto(string Title, string Author, string Path);
+public record MusicToRepoDto(string Title, string Author, string Path, int UserId);

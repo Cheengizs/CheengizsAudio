@@ -79,8 +79,9 @@ addMusicBtn.addEventListener("click", async () => {
   const title = document.getElementById("input-music_title").value.trim();
   const author = document.getElementById("input-music_author").value.trim();
   const path = document.getElementById("input-music_path").value.trim();
+  const userId = document.getElementById("input-user-id").value.trim();
 
-  if (!title || !author || !path) {
+  if (!title || !author || !path || !userId) {
     statusWarning(musicStatus);
     return;
   }
@@ -89,6 +90,7 @@ addMusicBtn.addEventListener("click", async () => {
     Title: title,
     Author: author,
     Path: path,
+    UserId: Number(userId),
   };
 
   await sendRequest("audio", data, musicStatus);
@@ -122,6 +124,9 @@ const clearPlaylistBtn = document.querySelector(
   ".playlist_container #btn-clear-playlist"
 );
 const playlistStatus = document.querySelector("#playlist-status");
+const trackAddToPlaylistStatus = document.querySelector(
+  "#track-add-to-playlist-status"
+);
 
 addPlaylistBtn.addEventListener("click", async () => {
   const title = document.getElementById("input-playlist_title").value.trim();
@@ -142,6 +147,29 @@ addPlaylistBtn.addEventListener("click", async () => {
 clearPlaylistBtn.addEventListener("click", () => {
   document.getElementById("input-playlist_title").value = "";
   playlistStatus.textContent = "Cleared.";
+});
+
+const addAudioToPlaylistBtn = document.querySelector("#btn-add-to-playlist");
+addAudioToPlaylistBtn.addEventListener("click", async () => {
+  const audioId = document.getElementById("input-audio-id").value.trim();
+
+  const playlistId = document.getElementById("input-playlist-id").value.trim();
+
+  if (!audioId || !playlistId) {
+    statusWarning(playlistStatus);
+    return;
+  }
+
+  const data = {
+    AudioId: Number(audioId),
+    PlaylistId: Number(playlistId),
+  };
+
+  await sendRequest(
+    "playlist/addTrackToPlaylist",
+    data,
+    trackAddToPlaylistStatus
+  );
 });
 
 // === USER MANAGEMENT ===

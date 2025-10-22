@@ -6,4 +6,5 @@ public interface IPlaylistRepository
 {
     Task CreatePlaylist(PlaylistToRepoDto newPlaylist);
     Task<bool> IsCanAddPlaylist(PlaylistToRepoDto newPlaylist);
+    Task AddTrackToPlaylist(TrackToPlaylist newTrack);
 }

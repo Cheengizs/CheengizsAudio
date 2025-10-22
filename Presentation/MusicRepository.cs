@@ -43,7 +43,7 @@ public class MusicRepository : IMusicRepository
     {
         await using var connection = _context.GetConnection();
         connection.Open();
-        var sql = @"SELECT * FROM music WHERE id = @id";
+        var sql = @"SELECT * FROM dbo.music WHERE id = @id";
         var res = connection.Query<Music>(sql, new { id }).FirstOrDefault();
 
         return res;
@@ -65,13 +65,14 @@ public class MusicRepository : IMusicRepository
         {
             Title = music.Title,
             Author = music.Author,
-            Path = music.Path
+            Path = music.Path,
+            UserId = music.UserId
         };
 
         await using var connection = _context.GetConnection();
-        connection.Open();
+        await connection.OpenAsync();
 
-        string sql = @"INSERT INTO dbo.music (Title, Author, Path) VALUES (@Title, @Author, @Path)";
+        string sql = @"INSERT INTO dbo.music (Title, Author, Path, user_id) VALUES (@Title, @Author, @Path, @UserId)";
         try
         {
             await connection.ExecuteAsync(sql, musicToAdd);

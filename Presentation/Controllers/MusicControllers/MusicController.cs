@@ -2,6 +2,8 @@
 using Presentation.PresentationDto.MusicDto;
 using System.IO;
 using System;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers.MusicControllers;
 
@@ -16,6 +18,7 @@ public class MusicController : ControllerBase
         _musicRepository = musicRepository;
     }
 
+    [Authorize]
     [HttpPost("upload")]
     public async Task<IActionResult> UploadMusic(IFormFile file)
     {
@@ -33,7 +36,13 @@ public class MusicController : ControllerBase
                 await file.CopyToAsync(stream);
             }
             
-            MusicToRepoDto dto = new("gay", "gay", newFilePath);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null)
+                return Unauthorized("Не удалось получить идентификатор пользователя из токена.");
+
+            int userId = int.Parse(userIdClaim);
+            
+            MusicToRepoDto dto = new("gay", "gay", newFilePath, userId);
             await _musicRepository.AddMusicAsync(dto);
             
             return Ok(new { message = "Файл успешно загружен!", fileName = file.FileName });
@@ -45,6 +54,25 @@ public class MusicController : ControllerBase
         }
     }
 
+    [HttpGet("photo/{id}")]
+    public async Task<IActionResult> GetMusicPhoto(int id)
+    {
+        var music = await _musicRepository.GetById(id);
+        if (music == null)
+            return NotFound("Музыка не найдена в базе данных.");
+
+        if (!System.IO.File.Exists(music.PhotoPath))
+            return NotFound("Фото не найдено на диске.");
+
+        var contentType = "image/png";
+        var fileName = Path.GetFileName(music.PhotoPath);
+
+        Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        Response.Headers["Pragma"] = "no-cache";
+        Response.Headers["Expires"] = "0";
+
+        return PhysicalFile(music.PhotoPath, contentType, fileName);
+    }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMusicByIdAsync(int id)
@@ -124,8 +152,10 @@ public class MusicController : ControllerBase
             return BadRequest("Path is required");
         if (string.IsNullOrWhiteSpace(dto.Author))
             return BadRequest("Author is required");
+        if (dto.UserId <= 0)
+            return BadRequest("Invalid UserId");
 
-        MusicToRepoDto repoDto = new MusicToRepoDto(dto.Title, dto.Author, dto.Path);
+        MusicToRepoDto repoDto = new MusicToRepoDto(dto.Title, dto.Author, dto.Path, dto.UserId);
         try
         {
             await _musicRepository.AddMusicAsync(repoDto);

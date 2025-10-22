@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Presentation.Models;
 using Presentation.PresentationDto.PlaylistDto;
 
@@ -47,6 +48,23 @@ public class PlaylistRepository : IPlaylistRepository
             var res = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { UserId = newPlaylist.UserId });
             if (res != 1) return false;
             return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task AddTrackToPlaylist(TrackToPlaylist newTrack)
+    {
+        await using var connection = _context.GetConnection();
+        await connection.OpenAsync();
+        string sql = @"INSERT INTO dbo.music_playlist (music_id, playlist_id) VALUES (@AudioId, @PlaylistId)";
+
+        try
+        {
+            await connection.ExecuteAsync(sql, newTrack);
         }
         catch (Exception e)
         {

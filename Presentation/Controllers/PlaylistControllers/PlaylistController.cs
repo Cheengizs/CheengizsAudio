@@ -16,6 +16,20 @@ public class PlaylistController : ControllerBase
         _playlistRepository = playlistRepository;
     }
 
+    [HttpPost("addTrackToPlaylist")]
+    public async Task<IActionResult> AddTrackToPlaylist([FromBody] TrackToPlaylist trackToPlaylist)
+    {
+        try
+        {
+            await _playlistRepository.AddTrackToPlaylist(trackToPlaylist);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }   
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreatePlaylist([FromBody] PlaylistCreateRequestDto dto)
     {
