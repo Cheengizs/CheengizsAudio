@@ -28,8 +28,18 @@ body {
   z-index: -1;
   will-change: transform;
   animation: tunnel 3s ease-in-out infinite;
+  animation-play-state: paused; /* default running */
 }
 
+@keyframes tunnel {
+  0%,
+  100% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+}
 @keyframes tunnel {
   0%,
   100% {

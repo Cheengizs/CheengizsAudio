@@ -50,4 +50,13 @@ public class PlaylistController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpGet("getRandom")]
+    public async Task<IActionResult> GetRandom()
+    {
+        var playlist = await _playlistRepository.GetRandom();
+        var userName = await _playlistRepository.GetPlaylistUsername(playlist.Id);
+        var res = new PlaylistResponseDto(playlist.Id, playlist.Title, userName);
+        return Ok(res);
+    }
 }

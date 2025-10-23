@@ -70,7 +70,7 @@ async function setAndLoadTrack() {
     const link = await URL.createObjectURL(blob);
     audio = new Audio(link);
     audio.autoplay = true;
-
+    audio.playbackRate = 1;
     currTimeSpan.innerText = "00:00";
 
     audio.addEventListener("ended", async () => {
@@ -100,8 +100,10 @@ async function setAndLoadTrack() {
       API_BASE_URL + `/audio/photo/${audioId}`
     );
     if (!responseImageBlob.ok) {
-      document.querySelector("#main_photo").src = "./imageLoadFailed.png";
+      showErrorPage();
+      return;
     }
+
     const blobImage = await responseImageBlob.blob();
     const linkImage = await URL.createObjectURL(blobImage);
     console.log(blobImage);
@@ -158,8 +160,10 @@ panel.addEventListener("mouseleave", () => {
 playBtn.addEventListener("click", () => {
   if (isPlaying) {
     audio.pause();
+    document.querySelector(".background").style.animationPlayState = "paused"; // pause background animation
   } else {
     audio.play();
+    document.querySelector(".background").style.animationPlayState = "running"; // resume animation
   }
   isPlaying = !isPlaying;
   playBtn.textContent = isPlaying ? "⏸" : "▶";

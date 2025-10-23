@@ -72,4 +72,40 @@ public class PlaylistRepository : IPlaylistRepository
             throw;
         }
     }
+
+    public async Task<Playlist> GetRandom()
+    {
+        await using var connection = _context.GetConnection();
+        await connection.OpenAsync();
+        string sql = "SELECT * FROM dbo.playlist";
+        try
+        {
+            var resList = (await connection.QueryAsync<Playlist>(sql)).ToList();
+            var res = resList[new Random().Next(0, resList.Count)];
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<string> GetPlaylistUsername(int id)
+    {
+        await using var connection = _context.GetConnection();
+        await connection.OpenAsync();
+        string sql = "SELECT * FROM dbo.app_user WHERE Id = @Id";
+        try
+        {
+            var res = await connection.QueryFirstOrDefaultAsync<User>(sql, new { Id = id });
+            
+            return res==null ? "Unknown artist lol back" : res.Username;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

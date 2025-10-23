@@ -29,22 +29,22 @@ public class MusicController : ControllerBase
 
             var uploadPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).ToString() + "\\audios");
             Console.WriteLine(uploadPath);
-            
+
             string newFilePath = uploadPath + "\\" + file.FileName;
             using (var stream = new FileStream(newFilePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            
+
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null)
                 return Unauthorized("Не удалось получить идентификатор пользователя из токена.");
 
             int userId = int.Parse(userIdClaim);
-            
+
             MusicToRepoDto dto = new("gay", "gay", newFilePath, userId);
             await _musicRepository.AddMusicAsync(dto);
-            
+
             return Ok(new { message = "Файл успешно загружен!", fileName = file.FileName });
         }
         catch (Exception ex)
@@ -62,7 +62,9 @@ public class MusicController : ControllerBase
             return NotFound("Музыка не найдена в базе данных.");
 
         if (!System.IO.File.Exists(music.PhotoPath))
-            return NotFound("Фото не найдено на диске.");
+        {
+            music.PhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "null.png");
+        }
 
         var contentType = "image/png";
         var fileName = Path.GetFileName(music.PhotoPath);
@@ -73,7 +75,7 @@ public class MusicController : ControllerBase
 
         return PhysicalFile(music.PhotoPath, contentType, fileName);
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMusicByIdAsync(int id)
     {
@@ -83,7 +85,7 @@ public class MusicController : ControllerBase
 
             if (music == null)
                 return NotFound();
-            
+
             var res = new MusicResponseDto(music.Title, music.Author);
             return Ok(res);
         }
@@ -103,7 +105,12 @@ public class MusicController : ControllerBase
             {
                 return BadRequest();
             }
-            return BadRequest();
+
+            List<MusicIdResponseDto> res = new();
+            var temp = await _musicRepository.GetById(context.AudioId.Value);
+            var resTemp = new MusicIdResponseDto(temp.Id, temp.Title, temp.Author);
+            res.Add(resTemp);
+            return Ok(res);
         }
         else
         {
@@ -116,6 +123,18 @@ public class MusicController : ControllerBase
 
             return Ok(res);
         }
+    }
+
+    [HttpGet("getFirstTrackFromPlaylist/{id}")]
+    public async Task<IActionResult> GetMusicFirstTrackFromPlaylistAsync(int id)
+    {
+        var tempList = await _musicRepository.GetMusicFromPlaylist(id);
+        var temp = tempList.FirstOrDefault();
+        if (temp == null) 
+            return NotFound();
+
+        var res = new MusicIdResponseDto(temp.Id, temp.Title, temp.Author);
+        return Ok(res);
     }
 
     [HttpGet("download/{id}")]
@@ -140,9 +159,10 @@ public class MusicController : ControllerBase
     public async Task<IActionResult> GetRandomMusic()
     {
         var elem = await _musicRepository.GetRandom();
-        return Ok(new MusicIdResponseDto(elem.Id, elem.Title, elem.Author));
+        var res = new MusicIdResponseDto(elem.Id, elem.Title, elem.Author);
+        return Ok(res);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddNewTrack([FromBody] MusicRequestDto dto)
     {
