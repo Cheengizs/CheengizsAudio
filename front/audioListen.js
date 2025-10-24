@@ -2,7 +2,7 @@ import showErrorPage from "./errorPageFunction.js";
 import isNumber from "./isNumberFunction.js";
 import formatTime from "./formatTimeFunction.js";
 
-const API_BASE_URL = "http://localhost:5272/api/v1";
+const API_BASE_URL = "http://192.168.0.155:5272/api/v1";
 
 let audioList;
 let audioIndex = 0;
@@ -196,5 +196,6 @@ document.getElementById("next-btn").addEventListener("click", async () => {
   if (audio instanceof Audio) audio.pause();
   audioIndex++;
   await setAndLoadTrack();
+
   audio.play();
 });

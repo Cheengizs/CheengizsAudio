@@ -14,7 +14,9 @@ public class UserController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly IUserPasswordHasher _userPasswordHasher;
     private readonly IJwtService _jwtService;
-    public UserController(IUserRepository userRepository, IUserPasswordHasher userPasswordHasher, IJwtService jwtService)
+
+    public UserController(IUserRepository userRepository, IUserPasswordHasher userPasswordHasher,
+        IJwtService jwtService)
     {
         _userRepository = userRepository;
         _userPasswordHasher = userPasswordHasher;
@@ -42,15 +44,38 @@ public class UserController : ControllerBase
     public async Task<IActionResult> LoginUser([FromBody] UserLoginRequestDto dto)
     {
         var user = await _userRepository.GetUserByEmailAsync(dto.Email);
-        
+
         if (user == null)
             return Unauthorized("Invalid email or password");
 
         if (!_userPasswordHasher.VerifyPassword(dto.Password, user.HashPassword))
             return Unauthorized("Invalid email or password");
-        
+
         var userToJwtDto = new UserToJwtDto(user.Id, user.Username, user.Email);
         return Ok(await _jwtService.GenerateJwtAsync(userToJwtDto));
-        
+    }
+
+    [HttpGet("user/getRandom")]
+    public async Task<IActionResult> GetRandomUser()
+    {
+        try
+        {
+            var user = await _userRepository.GetRandomUser();
+            UserResponseDto res = new UserResponseDto(user.Id, user.Username);
+            return Ok(res);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpGet("user/photo/{id}")]
+    public async Task<IActionResult> GetUserPhoto(int id)
+    {
+        string photoPath = Directory.GetCurrentDirectory() + @"/defaultPhotos/emptyUserPhoto.png";
+        string contentType = @"image/png";
+        return PhysicalFile(photoPath, contentType);
     }
 }

@@ -63,7 +63,7 @@ public class MusicController : ControllerBase
 
         if (!System.IO.File.Exists(music.PhotoPath))
         {
-            music.PhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "null.png");
+            music.PhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "defaultPhotos/null.png");
         }
 
         var contentType = "image/png";

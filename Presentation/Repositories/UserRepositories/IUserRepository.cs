@@ -8,4 +8,5 @@ public interface IUserRepository
     Task AddUserAsync(UserToRepoDto dto);
     Task<User?> GetUserByEmailAsync(string email);
     Task<bool> UserExistsAsync(string email);
+    Task<User> GetRandomUser();
 }

@@ -41,4 +41,23 @@ public class UserRepository : IUserRepository
         var res = (await connection.QueryAsync<User>(sql, new { Email = email }) ).ToList();
         return res.Count >= 1;
     }
+
+    public async Task<User> GetRandomUser()
+    {
+        await using var connection = _context.GetConnection();
+        await connection.OpenAsync();
+        string sql = "SELECT * FROM app_user";
+
+        try
+        {
+            var userList = (await connection.QueryAsync<User>(sql)).ToList();
+            var res = userList[Random.Shared.Next(userList.Count)];
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

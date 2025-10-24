@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5272/api/v1";
+import API_BASE_URL from "./constants.js";
 
 const audioSelect_input = document.querySelector("#audioSelect_input");
 const btn_input = document.querySelector(".btn_input");
